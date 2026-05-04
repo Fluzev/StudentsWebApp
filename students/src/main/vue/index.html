@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Университет</title>
+    <!-- 1. Подключаем стили: Bulma, Buefy и Material Design Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/buefy/dist/buefy.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css">
+</head>
+<body>
+    <!-- Главный контейнер приложения -->
+    <div id="app"></div>
+
+    <!-- Подключаем Vue и Router -->
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.2/dist/axios.min.js"></script>
+
+    <!-- Модуль Vue приложения с роутингом -->
+    <script type="module">
+        // Импорт компонентов как Named Exports
+        import { default as studentsList } from '../vue/components/students-list.js';
+        import addStudentComponent from '../vue/components/add-student.js';
+
+        const routes = [
+            { path: '/', redirect: '/students' },
+            { path: '/students', name: 'students', component: studentsList },
+            { path: '/add-student', name: 'add-student', component: addStudentComponent }
+        ];
+
+        // Создание роутера
+        const router = VueRouter.createRouter({
+            history: VueRouter.createWebHashHistory(),
+            routes
+        });
+
+// Создание и монтирование приложения
+        const app = Vue.createApp({
+          template: '<router-view />'
+        });
+
+        app.use(router);
+        app.mount('#app');
+    </script>
+
+    <!-- Подключаем дополнительные CSS стили -->
+    <link rel="stylesheet" type="text/css" href="main.css">
+</body>
+</html>
