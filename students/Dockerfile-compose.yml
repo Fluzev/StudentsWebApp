@@ -1,0 +1,42 @@
+
+services:
+  spring-boot-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: students-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.H2Dialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+    volumes:
+      - h2-data:/var/lib/h2/data
+    networks:
+      - students-network
+
+  nginx-frontend:
+    image: nginx:alpine
+    container_name: students-frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./vue/index.html:/usr/share/nginx/html/index.html
+      - ./vue/components/students-list.js:/usr/share/nginx/html/vue/components/students-list.js
+      - ./vue/components/add-student.js:/usr/share/nginx/html/vue/components/add-student.js
+      - ./vue/main.css:/usr/share/nginx/html/main.css
+    depends_on:
+      - spring-boot-backend
+    networks:
+      - students-network
+
+networks:
+  students-network:
+    driver: bridge
+
+volumes:
+  h2-data:
